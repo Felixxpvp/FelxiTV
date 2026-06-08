@@ -13,32 +13,39 @@
 
 ---
 
-**Stand:** <TT.MM.JJJJ>
+**Stand:** 08.06.2026
 
 ## Kennzahlen
 
-<Tabelle mit deinen Kern-Zahlen. Umsatz, Kunden, Pipeline, Conversion, was du eben verfolgst.>
-
 | Kennzahl | Wert | Notiz |
 |---|---|---|
-| <Name> | <Wert> | <Kontext> |
-| <Name> | <Wert> | <Kontext> |
+| Jahresumsatz gesamt | ~3.000 € | Alle Sparten zusammen, grobe Schätzung |
+| Met-Produktion | 240 Flaschen/Jahr | Aktuelles Maximum, Ausbau geplant |
+| Stammkunden Met | ~10 | Direktverkauf an Privatpersonen |
+| Gemüsebau-Fläche | 1.000 m² | Anbau- und Erntefläche |
+| Obstbäume | ~30 | Apfel, Birne, Kirsche (Mischobst) |
+| Größte Kostenstelle | Met-Herstellung | Genaue Zahl noch nicht erfasst |
 
 ## Stand zur Strategie
 
-<Wie weit bist du am Nordstern aus `strategy.md`? Lücke zum Ziel konkret beziffern, wenn möglich.>
+- Met-Raum fehlt noch → Produktion gedeckelt bei 240 Fl./Jahr
+- Pick-your-own noch nicht gestartet → kein Umsatz aus diesem Kanal
+- Fleischerei noch nicht gebaut → Jagd noch nicht vermarktet
+- 3-Hektar-Grenze noch nicht erreicht → Betriebsgründung offen
 
 ## Laufendes
 
-<Aktive Projekte, jüngste Wins, Blocker, Sachen in Bewegung.>
+- Met läuft und wird verkauft
+- Gemüse und Obst: Ernte und Direktverkauf an Stammkunden
+- Planung: Met-Raum, Fleischerei, Pick-your-own, Hofladen
 
 ## Team-Auslastung
 
-<Bist du dünn besetzt, am Einstellen, am Auslagern? Wie ist die Lastverteilung?>
+Solobetrieb — Felix macht alles selbst, parallel zur Schule. Kapazität ist das größte Limit.
 
 ## Datenquellen
 
-<Woher kommen die Zahlen oben? Stripe, Google Analytics, Excel, CRM, Bauchgefühl?>
+Aktuell aus dem Kopf — keine Buchhaltungssoftware, keine strukturierten Aufzeichnungen. Das ist ein Bereich, wo der CEO-GPT helfen kann.
 
 ---
 

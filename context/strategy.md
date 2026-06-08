@@ -15,27 +15,34 @@
 
 ## Aktuelle Phase
 
-<Welches Quartal, welches Jahr, welcher Zeitraum? Was ist das Großbild gerade?>
+Wirtschaftsjahr 2026 — Aufbauphase. Kernbetrieb läuft, jetzt kommen Infrastruktur und Vermarktung.
 
 ## Nordstern
 
-<Das eine Ziel, das alles andere überragt. Was wäre der größte Wurf in diesem Zeitraum?>
+Einen anerkannten landwirtschaftlichen Betrieb gründen (mind. 3 ha Fläche nach österreichischem Recht), der Gemüse, Obst, Met, Fleisch und Jagd unter einem Dach strukturiert bewirtschaftet und vermarktet.
 
 ## Strategische Hebel
 
-<Drei bis fünf Hebel, an denen du gerade ziehst, um den Nordstern zu erreichen.>
-
-1. <Hebel>
-2. <Hebel>
-3. <Hebel>
+1. **Met-Raum bauen** — lebensmitteltaugliche Produktionsfläche schaffen, damit die Menge hochgehen kann (aktuell 240 Flaschen/Jahr, Potenzial deutlich höher)
+2. **Pick-your-own einführen** — Kunden können per Termin selbst auf dem Feld/Obstgarten ernten (Gemüse + Obst); neue Vermarktungsstrategie ohne klassischen Vertrieb
+3. **Fleischerei aufbauen** — kombiniert mit der Jagd; eigener Verarbeitungsraum als nächste Investition
+4. **Fläche auf 3 ha erweitern** — Voraussetzung für die offizielle Betriebsgründung und staatliche Förderungen in Österreich
+5. **Betriebsprozesse dokumentieren und verbessern** — im nächsten Wirtschaftsjahr Arbeitsschritte optimieren
 
 ## Wie Erfolg aussieht
 
-<Wenn die nächsten drei bis sechs Monate gut laufen, was ist dann anders?>
+In einem Jahr:
+- Met-Raum steht und ist lebensmittelrechtlich abgenommen
+- Erste Pick-your-own-Saison hat stattgefunden
+- Fleischerei ist konkret geplant oder im Bau
+- Flächen-Situation (3-ha-Frage) ist geklärt oder zumindest ein klarer Plan dafür steht
 
 ## Offene Fragen
 
-<Wo bist du noch unsicher? Welche Entscheidungen stehen an?>
+**Betriebsgründung Österreich:** Für einen anerkannten landwirtschaftlichen Betrieb braucht man in Österreich mindestens 3 Hektar. Felix hat diese Fläche noch nicht. Fragen offen:
+- Wie und wo kommt die Fläche her? Pacht, Kauf, Zusammenschluss?
+- Welche Förderungen sind mit dem Betrieb verbunden, und ab wann greifen sie?
+- Gibt es Ausnahmen oder alternative Wege zur Anerkennung?
 
 ---
 

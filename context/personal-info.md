@@ -15,26 +15,26 @@
 
 ## Wer du bist
 
-**Name:** <Vorname>
-**Rolle:** <Geschäftsführer, Gründer, Operations, Marketing, etc.>
+**Name:** Felix Schneider
+**Rolle:** Landwirt, Unternehmer, Schüler
 
-<Ein bis zwei Sätze, was du im Business tust.>
+Felix führt mehrere Bereiche parallel: Gemüsebau, Obstbau, Jagd, Fleischverarbeitung und Met-Herstellung — und ist gleichzeitig noch in der Schule.
 
 ## Was du machst
 
-<Was sind deine Hauptverantwortungen? Wo geht der Großteil deiner Zeit hin? Welche Entscheidungen landen auf deinem Tisch?>
+Der Großteil der Zeit geht aktuell in die Schule. Daneben läuft das Geschäft: Anbau, Ernte, Verarbeitung, Verkauf — alles Handarbeit, alles selbst.
 
 ## Was du nicht machst
 
-<Was liegt bei anderen im Team oder ist explizit nicht deine Baustelle?>
+Noch kein dediziertes Büro-Team. Alles läuft über Felix selbst.
 
 ## Wofür du diesen CEO-GPT nutzen willst
 
-<Was wäre am wertvollsten? Analysen, Content, Strategie, Operations, Automatisierung, etwas anderes?>
+Planung und Büroarbeit abnehmen: Dokumentation, Kalender, Aufgaben strukturieren, Entscheidungen vorbereiten. Alles, was nicht zwingend selbst gemacht werden muss, soll der Mitarbeiter übernehmen.
 
 ## Hintergrund
 
-<Etwas zu deinen Skills, deinem Arbeitsstil, deinen Vorlieben? Eher technisch oder nicht? Allein oder im Team?>
+Nicht technisch im Entwickler-Sinne. Praktisch orientiert, macht vieles selbst. Jugendlicher Unternehmer mit breitem Handwerk-Background.
 
 ---
 

@@ -1,0 +1,41 @@
+# ============================================================
+# CEO-GPT Arbeitsplatz, .gitignore
+# Dateien und Ordner, die nie zu Git wandern sollen.
+# Schützt deine Secrets, verhindert Bloat und hält das Repo sauber.
+# ============================================================
+
+# --- Credentials (kritisch, niemals committen) ---
+.env
+credentials/
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# --- Daten (werden generiert, reproduzierbar aus Sammel-Scripts) ---
+data/*.db
+data/*.db-journal
+data/*.db-shm
+data/*.db-wal
+data/*.log
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- Temp-Dateien ---
+*.tmp
+*.bak
+
+# --- Node (falls genutzt) ---
+node_modules/

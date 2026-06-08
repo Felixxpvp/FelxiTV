@@ -27,3 +27,7 @@ logs/
 # Temporäre Dateien
 *.tmp
 *.temp
+
+# Daten-Modul
+credentials/
+data/*.db

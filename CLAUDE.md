@@ -78,13 +78,27 @@ Wir bauen den Mitarbeiter in Teilen auf. Jeder Teil ist für sich nützlich, und
 │   ├── business-info.md     # Was dein Business macht
 │   ├── personal-info.md     # Wer du bist, deine Rolle
 │   ├── strategy.md          # Aktuelle Prioritäten und Ziele
-│   ├── current-data.md      # Wichtige Zahlen und Lage
+│   ├── current-data.md      # Qualitative Notizen und offene Punkte
+│   ├── group/
+│   │   └── key-metrics.md   # Aktuelle Kennzahlen (automatisch aus Datenbank)
 │   └── import/              # Dokumente reinwerfen für Mitarbeiter-Analyse
+├── data/
+│   └── data.db              # SQLite-Datenbank: alle Kennzahlen mit Verlauf
 ├── module-installs/         # Fähigkeiten zum Einrichten
 ├── plans/                   # Pläne aus /create-plan
 ├── outputs/                 # Fertige Arbeit, Reports, Analysen
-├── reference/               # Vorlagen und wiederverwendbare Muster
-├── scripts/                 # Automatisierungs-Skripte (kommen mit neuen Fähigkeiten)
+├── reference/
+│   └── data-access.md       # Tabellen-Schemas und SQL-Beispiele für Datenbank-Abfragen
+├── scripts/                 # Automatisierungs-Skripte
+│   ├── db.py                # Datenbank-Verwaltung
+│   ├── config.py            # Lädt API-Keys aus .env
+│   ├── collect.py           # Orchestrator: startet alle Sammler
+│   ├── collect_produktion.py# Liest produktion.xlsx → Datenbank
+│   ├── collect_finanzen.py  # Liest finanzen.xlsx → Datenbank
+│   ├── collect_fx_rates.py  # Wechselkurse (Starter-Sammler)
+│   ├── generate_metrics.py  # Erzeugt key-metrics.md aus Datenbank
+│   ├── produktion.xlsx      # Produktions-Erfassung (Met, Gemüse, Obst, Jagd)
+│   └── finanzen.xlsx        # Einnahmen- und Ausgaben-Erfassung
 └── shares/                  # Verpackte Systeme zum Weitergeben (aus /share)
 ```
 
@@ -158,6 +172,30 @@ Beispiel: `/share die Daten-Pipeline`
 ### /task-audit
 
 Geführtes Interview, das jede wiederkehrende Aufgabe in deinem Business kartiert. Ergebnis ist eine Übersicht mit Bewertung pro Aufgabe (voll automatisierbar, teilweise, noch nicht, nur Mensch). Das ist die Grundlage für den Hand-Teil.
+
+### Daten aktualisieren
+
+Zahlen in `scripts/produktion.xlsx` oder `scripts/finanzen.xlsx` eingetragen? Dann:
+
+```
+python scripts/collect.py
+```
+
+Das liest beide Excel-Dateien, speichert einen neuen Tagesstand in `data/data.db` und erneuert `context/group/key-metrics.md` automatisch. Der Windows-Aufgabenplaner macht das jeden Morgen automatisch.
+
+---
+
+## Daten-System
+
+Alle Kennzahlen werden täglich in `data/data.db` (SQLite) gespeichert. Die Datenbank baut mit der Zeit eine Geschichte auf — Woche gegen Woche, Monat gegen Monat.
+
+`key-metrics.md` wird automatisch erzeugt und über `/prime` geladen. Für direkte Datenbank-Abfragen `reference/data-access.md` laden — da stehen alle Tabellen-Schemas und SQL-Beispiele.
+
+Dein Mitarbeiter kann SQL direkt ausführen:
+```python
+import sqlite3
+conn = sqlite3.connect("data/data.db")
+```
 
 ---
 

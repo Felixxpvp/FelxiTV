@@ -1,0 +1,18 @@
+# ============================================================
+# Dein CEO-GPT Arbeitsplatz, Konfiguration der Umgebung
+# ============================================================
+#
+# Kopier diese Datei zu .env und füll deine Werte ein:
+#   cp .env.example .env
+#
+# Lad .env NIE zu Git hoch, sie enthält deine Secrets.
+# Die .gitignore verhindert das schon, trotzdem aufpassen.
+#
+# Bei jedem weiteren Modul kommt ein Hinweis, welche Keys hier
+# rein müssen. Diese Datei wächst mit deinem Arbeitsplatz mit.
+# ============================================================
+
+# --- Keys hier eintragen, sobald du Module installierst ---
+# Die INSTALL.md jedes Moduls sagt dir genau, was rein muss.
+# Format:
+#   SERVICE_NAME_API_KEY=dein-key-hier

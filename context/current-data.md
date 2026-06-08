@@ -1,6 +1,7 @@
 # Aktuelle Zahlen
 
-> Diese Datei hält Kennzahlen, Datenpunkte und den aktuellen Stand. Sie gibt deinem Mitarbeiter konkrete Anhaltspunkte für Analysen und Entscheidungen.
+> Diese Datei wird automatisch von `scripts/update_daten.py` aktualisiert.
+> Quellen: `scripts/produktion.xlsx`, `scripts/finanzen.xlsx`
 
 ---
 
@@ -13,46 +14,53 @@
 
 ---
 
-**Stand:** 08.06.2026
+**Stand:** 08.06.2026 _(automatisch generiert)_
 
 ## Kennzahlen
 
 | Kennzahl | Wert | Notiz |
 |---|---|---|
-| Jahresumsatz gesamt | ~3.000 € | Alle Sparten zusammen, grobe Schätzung |
-| Met-Produktion | 240 Flaschen/Jahr | Aktuelles Maximum, Ausbau geplant |
-| Stammkunden Met | ~10 | Direktverkauf an Privatpersonen |
-| Gemüsebau-Fläche | 1.000 m² | Anbau- und Erntefläche |
-| Obstbäume | ~30 | Apfel, Birne, Kirsche (Mischobst) |
-| Größte Kostenstelle | Met-Herstellung | Genaue Zahl noch nicht erfasst |
+| Gesamteinnahmen (lfd. Jahr) | 155 € | Aus finanzen.xlsx |
+| Gesamtausgaben (lfd. Jahr) | 225 € | Aus finanzen.xlsx |
+| Ergebnis (Einnahmen − Ausgaben) | -70 € | |
+| Met produziert (gesamt) | 140 Flaschen | Aus produktion.xlsx |
+| Met verkauft (gesamt) | 55 Flaschen | |
+| Gemüse verkauft | 18 kg | |
+| Obst verkauft | 0 kg | |
+
+## Einnahmen nach Sparte
+
+| Posten | Betrag | Notiz |
+|---|---|---|
+| Einnahmen Gemüse | 35 € | |
+| Einnahmen Met | 120 € | |
+
+## Ausgaben nach Sparte
+
+| Posten | Betrag | Notiz |
+|---|---|---|
+| Ausgaben Gemüse | 45 € | |
+| Ausgaben Met | 180 € | |
 
 ## Stand zur Strategie
 
-- Met-Raum fehlt noch → Produktion gedeckelt bei 240 Fl./Jahr
-- Pick-your-own noch nicht gestartet → kein Umsatz aus diesem Kanal
-- Fleischerei noch nicht gebaut → Jagd noch nicht vermarktet
-- 3-Hektar-Grenze noch nicht erreicht → Betriebsgründung offen
+- Met-Raum: noch nicht gebaut → Produktion gedeckelt
+- Pick-your-own: noch nicht gestartet
+- Fleischerei: noch nicht gebaut
+- 3-Hektar-Grenze: noch nicht erreicht
 
 ## Laufendes
 
-- Met läuft und wird verkauft
-- Gemüse und Obst: Ernte und Direktverkauf an Stammkunden
-- Planung: Met-Raum, Fleischerei, Pick-your-own, Hofladen
-
-## Team-Auslastung
-
-Solobetrieb — Felix macht alles selbst, parallel zur Schule. Kapazität ist das größte Limit.
+- Daten manuell in `scripts/produktion.xlsx` und `scripts/finanzen.xlsx` pflegen
+- Nach jedem Update: `python scripts/update_daten.py` ausführen
 
 ## Datenquellen
 
-Aktuell aus dem Kopf — keine Buchhaltungssoftware, keine strukturierten Aufzeichnungen. Das ist ein Bereich, wo der CEO-GPT helfen kann.
+- `scripts/produktion.xlsx` — Produktion und Verkauf je Sparte
+- `scripts/finanzen.xlsx` — Einnahmen und Ausgaben
 
 ---
 
 ## Automatisierungs-Notiz
 
-_Aktuell statischer Stand, von Hand gepflegt. Sobald `daten` läuft, kommen diese Zahlen automatisch aus deinen echten Quellen._
-
----
-
-_Regelmäßig aktualisieren. Veraltete Zahlen schwächen deinen Mitarbeiter als analytischen Partner._
+_Diese Datei wird von `update_daten.py` neu geschrieben. Direkte Änderungen hier werden beim nächsten Lauf überschrieben. Zahlen immer in den Excel-Dateien pflegen._

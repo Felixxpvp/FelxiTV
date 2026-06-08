@@ -7,7 +7,9 @@
 1. Lies `CLAUDE.md` vollständig
 2. Lies alle Dateien in `context/` durch
 3. Lies `context/group/key-metrics.md` — aktuelle Geschäftszahlen (automatisch aus der Datenbank)
-4. Wenn `context/import/` Dateien enthält, schau auch dort rein
+4. Lies `HISTORY.md` — CEO-GPT-Logbuch (was wurde gebaut, wann)
+5. Lies `docs/_index.md` — Doku-Routing-Index (wo die Dokus liegen)
+6. Wenn `context/import/` Dateien enthält, schau auch dort rein
 
 **On-Demand** (nur laden wenn eine Aufgabe es braucht):
 - `reference/data-access.md` — Tabellen-Schemas und SQL-Beispiele für direkte Datenbank-Abfragen

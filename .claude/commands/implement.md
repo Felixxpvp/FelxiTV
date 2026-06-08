@@ -59,6 +59,20 @@ plan_pfad: $ARGUMENTS (Pfad zur Plan-Datei, z.B. `plans/2026-05-11-wettbewerbsan
 
 ---
 
+### Phase 3b: Doku-Check
+
+Nach jedem fertigen Stück Arbeit:
+
+1. Prüf, ob die Änderungen ein neues System angelegt oder ein bestehendes deutlich verändert haben
+2. Lies `docs/_index.md` — gibt es schon eine Doku für dieses System?
+3. Wenn keine Doku existiert und die Änderungen sind sinnvoll (neues System, neuer Befehl, neue Integration):
+   - Leg eine Doku an mit der Vorlage in `docs/_templates/`
+   - Trag sie in `docs/_index.md` ein
+4. Wenn die Doku existiert, aber veraltet ist — aktualisier die betroffenen Abschnitte
+5. Aktualisier `HISTORY.md` mit dem, was umgesetzt wurde
+
+---
+
 ### Phase 4: Plan-Status aktualisieren
 
 Nach der Umsetzung pflegst du die Plan-Datei nach:

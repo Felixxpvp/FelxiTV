@@ -15,27 +15,29 @@
 
 ## Aktuelle Phase
 
-<Welches Quartal, welches Jahr, welcher Zeitraum? Was ist das Großbild gerade?>
+Mitte 2026 — Aufbauphase. Der Betrieb ist 2 Jahre alt und wächst organisch. Produktion, Infrastruktur und Vertrieb werden parallel ausgebaut.
 
 ## Nordstern
 
-<Das eine Ziel, das alles andere überragt. Was wäre der größte Wurf in diesem Zeitraum?>
+Produktionskapazität erweitern und einen eigenen Raum bauen — damit der Betrieb skalieren kann und professioneller aufgestellt ist.
 
 ## Strategische Hebel
 
-<Drei bis fünf Hebel, an denen du gerade ziehst, um den Nordstern zu erreichen.>
-
-1. <Hebel>
-2. <Hebel>
-3. <Hebel>
+1. **Produktionsraum bauen** — eigene Verarbeitungs- und Lagerfläche schaffen
+2. **Produktion erweitern** — mehr Mengen, mehr Produkte
+3. **Preise kalkulieren** — faire und profitable Preise für Fleisch und Säfte festlegen
+4. **Vertrieb ausbauen** — Wochenmärkte angehen, Hofladen planen
+5. **Online-Shop ausbauen** — mehr Sichtbarkeit, einfachere Bestellung
 
 ## Wie Erfolg aussieht
 
-<Wenn die nächsten drei bis sechs Monate gut laufen, was ist dann anders?>
+In 6 Monaten: Produktionsraum steht oder ist in Bau. Mehr Nachfragen als heute, Auftragslage wächst. Preise für alle Produkte sind klar kalkuliert. Wochenmarkt-Auftritte laufen.
 
 ## Offene Fragen
 
-<Wo bist du noch unsicher? Welche Entscheidungen stehen an?>
+- Was sind die richtigen Preise für Wildfleisch und Säfte?
+- Wann und wo ist der erste Wochenmarkt?
+- Wie und wann wird der Hofladen gebaut?
 
 ---
 

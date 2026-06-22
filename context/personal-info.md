@@ -15,26 +15,34 @@
 
 ## Wer du bist
 
-**Name:** <Vorname>
-**Rolle:** <Geschäftsführer, Gründer, Operations, Marketing, etc.>
+**Name:** Felix
+**Rolle:** Gründer, Landwirt, Jäger — Einzelunternehmer
 
-<Ein bis zwei Sätze, was du im Business tust.>
+Felix baut, jagt, verarbeitet und vermarktet alles selbst. Er ist für jeden Schritt im Betrieb verantwortlich, von der Ernte bis zum Kundenversand.
 
 ## Was du machst
 
-<Was sind deine Hauptverantwortungen? Wo geht der Großteil deiner Zeit hin? Welche Entscheidungen landen auf deinem Tisch?>
+- Anbau und Ernte von Gemüse
+- Herstellung von Met, Säften und verarbeiteten Produkten
+- Jagd und Fleischvermarktung
+- Direktverkauf an Privatkunden und über Online-Shop
+- Kundenkorrespondenz und Bestellungsabwicklung
 
 ## Was du nicht machst
 
-<Was liegt bei anderen im Team oder ist explizit nicht deine Baustelle?>
+Kein Team, keine Delegation. Alles landet bei Felix.
 
 ## Wofür du diesen CEO-GPT nutzen willst
 
-<Was wäre am wertvollsten? Analysen, Content, Strategie, Operations, Automatisierung, etwas anderes?>
+- **Buchhaltung:** Einnahmen, Ausgaben, Übersicht
+- **Marketing:** Texte, Ideen, Inhalte für Social Media und Shop
+- **Kalkulieren:** Preise für Fleisch, Säfte und neue Produkte ermitteln
+- **Kundenkorrespondenz:** Antworten auf Bestellungen und Anfragen per E-Mail und anderen Plattformen
+- **Online-Shop:** Aufbau und Pflege
 
 ## Hintergrund
 
-<Etwas zu deinen Skills, deinem Arbeitsstil, deinen Vorlieben? Eher technisch oder nicht? Allein oder im Team?>
+Nicht technisch. Arbeitet allein. Baut sein Business seit 2 Jahren Schritt für Schritt auf.
 
 ---
 

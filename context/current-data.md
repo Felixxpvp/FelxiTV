@@ -13,32 +13,39 @@
 
 ---
 
-**Stand:** <TT.MM.JJJJ>
+**Stand:** 22.06.2026
 
 ## Kennzahlen
 
-<Tabelle mit deinen Kern-Zahlen. Umsatz, Kunden, Pipeline, Conversion, was du eben verfolgst.>
-
 | Kennzahl | Wert | Notiz |
 |---|---|---|
-| <Name> | <Wert> | <Kontext> |
-| <Name> | <Wert> | <Kontext> |
+| Aktive Kunden | 10–15 | Privatkunden |
+| Jahresumsatz | ~6.000 € | Schätzwert |
+| Monatsumsatz (ca.) | ~500 € | Abgeleitet |
+| Preis Met 0,5 L | 9,50 € | Festgelegt |
+| Preis Wildfleisch | Noch offen | Kalkulation ausstehend |
+| Preis Säfte | Noch offen | Kalkulation ausstehend |
 
 ## Stand zur Strategie
 
-<Wie weit bist du am Nordstern aus `strategy.md`? Lücke zum Ziel konkret beziffern, wenn möglich.>
+- Produktionsraum: in Planung, noch nicht gebaut
+- Wochenmarkt: geplant, noch nicht gestartet
+- Hofladen: geplant, noch nicht gestartet
+- Preise für Fleisch und Säfte: noch nicht festgelegt
 
 ## Laufendes
 
-<Aktive Projekte, jüngste Wins, Blocker, Sachen in Bewegung.>
+- Produktionserweiterung wird vorbereitet
+- Online-Shop ist aktiv
+- Direktverkauf an Privatkunden läuft
 
 ## Team-Auslastung
 
-<Bist du dünn besetzt, am Einstellen, am Auslagern? Wie ist die Lastverteilung?>
+Solo-Betrieb. Felix macht alles alleine — Produktion, Verkauf, Kundenservice, Buchhaltung.
 
 ## Datenquellen
 
-<Woher kommen die Zahlen oben? Stripe, Google Analytics, Excel, CRM, Bauchgefühl?>
+Aktuell Bauchgefühl und eigene Aufzeichnungen. Kein CRM, keine Buchhaltungssoftware bisher eingerichtet.
 
 ---
 

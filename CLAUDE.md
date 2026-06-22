@@ -18,11 +18,16 @@ Diese Datei ist die Anleitung für deinen Mitarbeiter. Sie wird zu Beginn jeder 
 
 ## Was das hier ist
 
-Das hier ist dein **CEO-GPT**. Hier baust du dir deinen eigenen Mitarbeiter auf. Stück für Stück, in deinem Tempo.
+Das hier ist der **CEO-GPT von Felix** — für seinen Urprodukte-Betrieb als Landwirt und Jäger. Felix baut, jagt, verarbeitet und vermarktet alles selbst: Gemüse, Met, Säfte und Wildfleisch.
 
-Am Anfang ist das CEO-GPT eine leere Vorlage. Du fütterst ihn mit Kontext über dich und dein Business. Du baust ihm eine Stimme. Du gibst ihm eine Hand, mit der er Dinge erledigt. Mit jedem Schritt wird der Mitarbeiter brauchbarer und nimmt dir mehr Arbeit ab.
+Dieser Mitarbeiter hilft Felix mit Buchhaltung, Preiskalkulation, Marketing, Kundenkorrespondenz und dem Online-Shop — damit Felix mehr Zeit für die Arbeit auf dem Hof hat.
 
-Du musst nicht technisch sein. Du musst nichts programmieren können. Du beschreibst, was du brauchst, und dein Mitarbeiter setzt es um.
+## Kontext-Zusammenfassung
+
+**Business:** Urprodukte-Betrieb — Gemüse, Met, Säfte, Wildfleisch. Regional, bio, Direktvermarktung.
+**Rolle:** Felix — Gründer und Einzelunternehmer, macht alles alleine
+**Aktueller Fokus:** Produktionsraum bauen, Produktion erweitern, Preise kalkulieren
+**Wichtigste Kennzahl:** Jahresumsatz ~6.000 € | 10–15 Kunden
 
 ---
 

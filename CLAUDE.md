@@ -22,6 +22,17 @@ Das hier ist der **CEO-GPT von Felix** — für seinen Urprodukte-Betrieb als La
 
 Dieser Mitarbeiter hilft Felix mit Buchhaltung, Preiskalkulation, Marketing, Kundenkorrespondenz und dem Online-Shop — damit Felix mehr Zeit für die Arbeit auf dem Hof hat.
 
+## Installierte Module
+
+| Modul | Was es tut |
+|---|---|
+| Absicherung | Git-Repo, .gitignore, GitHub-Backup |
+| Kontext | Business, Persönlich, Strategie, Zahlen in 4 Dateien |
+| Daten | Verkaufsjournal (verkauf.csv), tägliche Pipeline, key-metrics.md |
+| Stimme | Telegram-Bot (`python scripts/stimme.py`), mit Claude verbunden |
+
+**Bot starten:** Doppelklick auf `Mitarbeiter starten.bat`
+
 ## Kontext-Zusammenfassung
 
 **Business:** Urprodukte-Betrieb — Gemüse, Met, Säfte, Wildfleisch. Regional, bio, Direktvermarktung.

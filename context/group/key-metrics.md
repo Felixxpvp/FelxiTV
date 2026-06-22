@@ -3,6 +3,9 @@
 > Automatisch aus der Datenbank erzeugt. Letztes Update: 2026-06-22
 > Quelle: `data/data.db` | Neu erzeugen: `python scripts/generate_metrics.py`
 
+## Lager
+✅ Alle Artikel über Mindestbestand.
+
 ## Kassenbuch
 | | Betrag |
 |---|---|
@@ -47,4 +50,5 @@
 |--------|-------------------|--------|
 | buchhaltung | 2026-06-20 | verbunden |
 | fx_rates | 2026-06-19 | verbunden |
+| lager | - | keine Datums-Spalte |
 | verkauf | 2026-06-22 | verbunden |

@@ -101,6 +101,31 @@ def section_fx_rates(conn):
 
 # --- ANPASSUNGS-ZONE ---
 
+def section_lager(conn):
+    """Lagerbestand — zeigt nur Artikel unter Mindestbestand."""
+    if not table_exists(conn, "lager"):
+        return []
+
+    warnungen = query_all(conn, """
+        SELECT artikel, kategorie, bestand, mindestbestand, einheit
+        FROM lager
+        WHERE mindestbestand IS NOT NULL AND bestand IS NOT NULL
+        AND bestand <= mindestbestand
+        ORDER BY kategorie, artikel
+    """)
+
+    if not warnungen:
+        return ["## Lager", "✅ Alle Artikel über Mindestbestand.", ""]
+
+    lines = ["## Lager — Nachbestellen ⚠️"]
+    lines.append("| Artikel | Bestand | Mindest | Einheit |")
+    lines.append("|---------|---------|---------|---------|")
+    for r in warnungen:
+        lines.append(f"| {r['artikel']} | {r['bestand']:.0f} | {r['mindestbestand']:.0f} | {r['einheit']} |")
+    lines.append("")
+    return lines
+
+
 def section_buchhaltung(conn):
     """Ein- und Ausgaben aus dem Kassenbuch."""
     if not table_exists(conn, "buchhaltung"):
@@ -193,6 +218,7 @@ def section_verkauf(conn):
 # Alle Sektions-Funktionen hier registrieren. Während der Installation
 # kommen weitere dazu.
 SECTIONS = [
+    section_lager,
     section_buchhaltung,
     section_verkauf,
     section_fx_rates,

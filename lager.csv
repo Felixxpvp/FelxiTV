@@ -1,0 +1,19 @@
+artikel,kategorie,einheit,bestand,mindestbestand,preis_pro_einheit,lieferant,notiz
+Met-Flaschen 0.5L,Flaschen,Stück,120,50,,,Für Honigwein
+Saft-Flaschen 0.5L,Flaschen,Stück,100,30,,,Für Fruchtsäfte
+Bügelverschlüsse,Flaschen,Stück,220,100,,,
+Etiketten Met,Flaschen,Stück,120,50,,,Aufkleber für Met-Flaschen
+Etiketten Saft,Flaschen,Stück,100,30,,,Aufkleber für Saft-Flaschen
+Kartons Versand,Verpackung,Stück,50,10,,,Für Online-Versand
+Honig,Imkerei,kg,30,5,,,Rohstoff für Met
+Hefe Met,Imkerei,Päckchen,20,5,,,Weinhefe oder Metansatz
+Wachs,Imkerei,kg,5,1,,,
+Rähmchen,Imkerei,Stück,20,5,,,
+Tomatensamen,Saatgut,Päckchen,10,2,,,
+Zucchinisamen,Saatgut,Päckchen,5,2,,,
+Paprikasamen,Saatgut,Päckchen,5,2,,,
+Salatsamen,Saatgut,Päckchen,8,3,,,
+Munition,Jagd,Stück,50,10,,,Für die Jagd
+Wildschweinsäcke,Jagd,Stück,20,5,,,Kühlsäcke / Vakuumbeutel
+Dünger,Anbau,kg,50,10,,,
+Pflanzerde,Anbau,kg,100,20,,,

@@ -6,7 +6,11 @@
 
 1. Lies `CLAUDE.md` vollständig
 2. Lies alle Dateien in `context/` durch
-3. Wenn `context/import/` Dateien enthält, schau auch dort rein
+3. Lies `context/group/key-metrics.md` — aktuelle Geschäftszahlen (automatisch aus der Datenbank)
+4. Wenn `context/import/` Dateien enthält, schau auch dort rein
+
+## On-Demand (nur wenn eine Aufgabe es braucht)
+- `reference/data-access.md` — Tabellen-Schemas, SQL-Beispiele, Sammler-Details
 
 ## Zusammenfassung an den Geschäftsführer
 
@@ -15,9 +19,11 @@ Wenn du fertig gelesen hast, fass kurz zusammen:
 1. **Wer er ist und was sein Business macht.** Ein bis zwei Sätze. Zeig, dass du das Bild hast.
 2. **Seine Rolle.** Wofür er verantwortlich ist und wo seine Zeit hingeht.
 3. **Aktuelle Prioritäten.** Was diese Wochen oder dieses Quartal zählt.
-4. **Stand der Zahlen.** Wichtige Kennzahlen aus `current-data.md`, falls vorhanden.
+4. **Daten-Stand.** Aktuelle Verkaufszahlen aus `key-metrics.md`. Einträge älter als 2 Tage markieren.
 5. **Verfügbare Befehle.** Welche Slash-Befehle in `.claude/commands/` liegen.
 6. **Bereit.** Bestätige knapp, dass du im Bild bist und auf Anweisungen wartest.
+
+Hinweis: Für tiefere Analyse kannst du direkt SQL gegen `data/data.db` ausführen.
 
 ## Verhalten
 

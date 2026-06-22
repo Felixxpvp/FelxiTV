@@ -1,5 +1,9 @@
 # API-Keys und Zugänge — niemals committen
 .env
+credentials/
+data/*.db
+data/collect.log
+.venv/
 
 # Python
 __pycache__/

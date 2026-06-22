@@ -101,6 +101,37 @@ def section_fx_rates(conn):
 
 # --- ANPASSUNGS-ZONE ---
 
+def section_waren(conn):
+    """Warenbestand - fertige Produkte zum Verkauf."""
+    if not table_exists(conn, "waren"):
+        return []
+
+    rows = query_all(conn, "SELECT produkt, kategorie, bestand, mindestbestand, einheit, verkaufspreis FROM waren ORDER BY kategorie, produkt")
+    if not rows:
+        return []
+
+    lines = ["## Warenbestand"]
+
+    # Gruppieren nach Kategorie
+    kategorien = {}
+    for r in rows:
+        k = r["kategorie"] or "Sonstiges"
+        kategorien.setdefault(k, []).append(r)
+
+    for kat, produkte in kategorien.items():
+        lines.append(f"**{kat}:**")
+        lines.append("| Produkt | Bestand | Einheit | Preis |")
+        lines.append("|---------|---------|---------|-------|")
+        for r in produkte:
+            preis = f"EUR {r['verkaufspreis']:.2f}" if r["verkaufspreis"] else "-"
+            warnung = " !" if (r["mindestbestand"] and r["bestand"] is not None
+                               and r["bestand"] <= r["mindestbestand"]) else ""
+            lines.append(f"| {r['produkt']}{warnung} | {r['bestand']:.0f} | {r['einheit']} | {preis} |")
+        lines.append("")
+
+    return lines
+
+
 def section_lager(conn):
     """Lagerbestand — zeigt nur Artikel unter Mindestbestand."""
     if not table_exists(conn, "lager"):
@@ -218,6 +249,7 @@ def section_verkauf(conn):
 # Alle Sektions-Funktionen hier registrieren. Während der Installation
 # kommen weitere dazu.
 SECTIONS = [
+    section_waren,
     section_lager,
     section_buchhaltung,
     section_verkauf,

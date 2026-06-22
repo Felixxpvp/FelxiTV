@@ -3,6 +3,37 @@
 > Automatisch aus der Datenbank erzeugt. Letztes Update: 2026-06-22
 > Quelle: `data/data.db` | Neu erzeugen: `python scripts/generate_metrics.py`
 
+## Warenbestand
+**Fleisch:**
+| Produkt | Bestand | Einheit | Preis |
+|---------|---------|---------|-------|
+| Reh (Frischfleisch) ! | 0 | kg | - |
+| Reh (Vakuum) ! | 0 | Paket | - |
+| Wildschwein (Frischfleisch) ! | 0 | kg | - |
+| Wildschwein (Vakuum) ! | 0 | Paket | - |
+
+**Gemüse:**
+| Produkt | Bestand | Einheit | Preis |
+|---------|---------|---------|-------|
+| Gemüsekorb gemischt ! | 0 | Korb | - |
+| Paprika ! | 0 | kg | - |
+| Salat ! | 0 | Stück | - |
+| Tomaten ! | 0 | kg | - |
+| Zucchini ! | 0 | kg | - |
+
+**Met:**
+| Produkt | Bestand | Einheit | Preis |
+|---------|---------|---------|-------|
+| Met 0.5L | 40 | Flasche | EUR 9.50 |
+| Met 0.75L ! | 0 | Flasche | - |
+
+**Saft:**
+| Produkt | Bestand | Einheit | Preis |
+|---------|---------|---------|-------|
+| Apfelsaft 0.5L ! | 0 | Flasche | - |
+| Birnensaft 0.5L ! | 0 | Flasche | - |
+| Gemischter Fruchtsaft 0.5L ! | 0 | Flasche | - |
+
 ## Lager
 ✅ Alle Artikel über Mindestbestand.
 
@@ -52,3 +83,4 @@
 | fx_rates | 2026-06-19 | verbunden |
 | lager | - | keine Datums-Spalte |
 | verkauf | 2026-06-22 | verbunden |
+| waren | - | keine Datums-Spalte |

@@ -1,0 +1,15 @@
+produkt,kategorie,einheit,bestand,mindestbestand,verkaufspreis,notiz
+Met 0.5L,Met,Flasche,40,10,9.50,Honigwein 0.5L Flasche
+Met 0.75L,Met,Flasche,0,5,,Honigwein 0.75L Flasche (falls geplant)
+Apfelsaft 0.5L,Saft,Flasche,0,10,,Frisch gepresster Apfelsaft
+Birnensaft 0.5L,Saft,Flasche,0,5,,Frisch gepresster Birnensaft
+Gemischter Fruchtsaft 0.5L,Saft,Flasche,0,5,,Gemischter Saft
+Wildschwein (Frischfleisch),Fleisch,kg,0,2,,Frischfleisch vom Wildschwein
+Wildschwein (Vakuum),Fleisch,Paket,0,5,,Vakuumiert portioniert
+Reh (Frischfleisch),Fleisch,kg,0,2,,Frischfleisch vom Reh
+Reh (Vakuum),Fleisch,Paket,0,5,,Vakuumiert portioniert
+Tomaten,Gemüse,kg,0,2,,Frische Tomaten
+Zucchini,Gemüse,kg,0,2,,Frische Zucchini
+Paprika,Gemüse,kg,0,2,,Frische Paprika
+Salat,Gemüse,Stück,0,5,,Kopfsalat oder Salate
+Gemüsekorb gemischt,Gemüse,Korb,0,2,,Gemischter Saisonkorb

@@ -1,17 +1,14 @@
 """
 Stimme: Telegram-Bot für Felix' CEO-GPT
 
-Dieser Bot läuft auf deinem Rechner und verbindet dein Handy
-mit deinem Mitarbeiter. Schick ihm Text oder Sprachnachrichten,
-er antwortet mit dem vollen Business-Kontext.
+24/7 erreichbar über Telegram. Verbunden mit Supabase-Datenbank und Claude.
+Kann Bestände abfragen, Verkäufe verbuchen und Kassenbuch führen.
 
 Starten: python scripts/stimme.py
-Stoppen: Ctrl+C im Terminal, oder Fenster schließen
 """
 
-import asyncio
 import os
-import tempfile
+from datetime import date, datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -20,100 +17,255 @@ WORKSPACE = Path(__file__).resolve().parent.parent
 load_dotenv(WORKSPACE / ".env")
 
 import anthropic
+from supabase import create_client, Client
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
 
-# ─── Konfiguration ───────────────────────────────────────────────────────────
+# ─── Konfiguration ────────────────────────────────────────────────────────────
 
-BOT_TOKEN   = os.getenv("TELEGRAM_BOT_TOKEN", "")
+BOT_TOKEN     = os.getenv("TELEGRAM_BOT_TOKEN", "")
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-ALLOWED_CHAT = os.getenv("TELEGRAM_CHAT_ID", "")  # Leer = alle akzeptieren (wird beim ersten Start gesetzt)
+SUPABASE_URL  = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY  = os.getenv("SUPABASE_KEY", "")
+ALLOWED_CHAT  = os.getenv("TELEGRAM_CHAT_ID", "")
 
-# claude-haiku-4-5: schnell und günstig für tägliche Bot-Nutzung
-MODEL = "claude-haiku-4-5-20251001"
+MODEL      = "claude-haiku-4-5-20251001"
 MAX_TOKENS = 1024
 
 
-# ─── Kontext laden ───────────────────────────────────────────────────────────
+# ─── Supabase ────────────────────────────────────────────────────────────────
+
+def sb() -> Client:
+    return create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
+# ─── Tools für Claude ────────────────────────────────────────────────────────
+
+TOOLS = [
+    {
+        "name": "produkte_abfragen",
+        "description": "Aktuellen Bestand aller Verkaufsprodukte abfragen (Met, Säfte, Fleisch, Gemüse)",
+        "input_schema": {"type": "object", "properties": {}, "required": []}
+    },
+    {
+        "name": "verkauf_verbuchen",
+        "description": "Einen Verkauf eintragen. Reduziert automatisch den Produktbestand und schreibt ins Kassenbuch.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "produkt": {"type": "string", "description": "Name des verkauften Produkts"},
+                "menge":   {"type": "number", "description": "Verkaufte Menge"},
+                "preis":   {"type": "number", "description": "Gesamterlös in Euro"},
+                "kanal":   {"type": "string", "description": "Direktverkauf, Online oder Markt"},
+                "datum":   {"type": "string", "description": "YYYY-MM-DD, leer = heute"}
+            },
+            "required": ["produkt", "preis"]
+        }
+    },
+    {
+        "name": "ausgabe_eintragen",
+        "description": "Eine Ausgabe ins Kassenbuch eintragen",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "betrag":       {"type": "number", "description": "Betrag in Euro"},
+                "kategorie":    {"type": "string", "description": "z.B. Saatgut, Jagd, Imkerei, Verpackung, Sonstiges"},
+                "beschreibung": {"type": "string", "description": "Was wurde gekauft oder bezahlt"},
+                "datum":        {"type": "string", "description": "YYYY-MM-DD, leer = heute"}
+            },
+            "required": ["betrag", "kategorie"]
+        }
+    },
+    {
+        "name": "kassenbuch_abfragen",
+        "description": "Kassenstand, Einnahmen und Ausgaben abfragen",
+        "input_schema": {"type": "object", "properties": {}, "required": []}
+    },
+    {
+        "name": "bestand_korrigieren",
+        "description": "Bestand eines Produkts manuell setzen, z.B. nach Produktion oder Inventur",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "produkt": {"type": "string", "description": "Name des Produkts"},
+                "bestand": {"type": "number", "description": "Neuer Bestand"}
+            },
+            "required": ["produkt", "bestand"]
+        }
+    }
+]
+
+
+def fuehre_tool_aus(name: str, inp: dict) -> str:
+    client = sb()
+    today  = date.today().isoformat()
+
+    try:
+        if name == "produkte_abfragen":
+            rows = client.table("produkte").select("*").order("kategorie").execute().data
+            if not rows:
+                return "Keine Produkte angelegt."
+            lines = []
+            kat = None
+            for r in rows:
+                if r["kategorie"] != kat:
+                    kat = r["kategorie"]
+                    lines.append(f"\n{kat}:")
+                bestand = r.get("bestand") or 0
+                einheit = r.get("einheit", "")
+                preis   = f" | {r['preis']:.2f} €" if r.get("preis") else ""
+                minb    = r.get("mindestbestand") or 0
+                warn    = " ⚠️ LEER" if bestand == 0 else (" ⚠️ KNAPP" if bestand <= minb else "")
+                lines.append(f"  {r['name']}: {bestand} {einheit}{preis}{warn}")
+            return "\n".join(lines).strip()
+
+        elif name == "verkauf_verbuchen":
+            produkt = inp["produkt"]
+            menge   = inp.get("menge", 1)
+            preis   = inp["preis"]
+            kanal   = inp.get("kanal", "Direktverkauf")
+            datum   = inp.get("datum") or today
+
+            client.table("verkauf").insert({
+                "datum": datum, "produkt": produkt,
+                "menge": menge, "preis": preis, "kanal": kanal
+            }).execute()
+
+            # Bestand reduzieren
+            row = client.table("produkte").select("bestand").eq("name", produkt).execute().data
+            neuer_bestand = None
+            if row:
+                neuer_bestand = max(0, (row[0].get("bestand") or 0) - menge)
+                client.table("produkte").update({
+                    "bestand": neuer_bestand,
+                    "aktualisiert_am": datetime.utcnow().isoformat()
+                }).eq("name", produkt).execute()
+
+            # Einnahme ins Kassenbuch
+            client.table("buchhaltung").insert({
+                "datum": datum, "typ": "Einnahme",
+                "kategorie": f"{produkt.split()[0]}-Verkauf",
+                "betrag": preis,
+                "beschreibung": f"{menge}x {produkt} ({kanal})"
+            }).execute()
+
+            rest = f" | Restbestand: {neuer_bestand}" if neuer_bestand is not None else ""
+            return f"✅ {menge}x {produkt} für {preis:.2f} € eingetragen{rest}"
+
+        elif name == "ausgabe_eintragen":
+            client.table("buchhaltung").insert({
+                "datum":        inp.get("datum") or today,
+                "typ":          "Ausgabe",
+                "kategorie":    inp["kategorie"],
+                "betrag":       inp["betrag"],
+                "beschreibung": inp.get("beschreibung", "")
+            }).execute()
+            return f"✅ {inp['betrag']:.2f} € für {inp['kategorie']} eingetragen"
+
+        elif name == "kassenbuch_abfragen":
+            rows = client.table("buchhaltung").select("*").order("datum", desc=True).limit(100).execute().data
+            if not rows:
+                return "Kassenbuch ist leer."
+            einnahmen = sum(r["betrag"] for r in rows if r["typ"] == "Einnahme")
+            ausgaben  = sum(r["betrag"] for r in rows if r["typ"] == "Ausgabe")
+            saldo     = einnahmen - ausgaben
+            lines = [
+                f"Einnahmen: {einnahmen:.2f} €",
+                f"Ausgaben:  {ausgaben:.2f} €",
+                f"Saldo:     {saldo:+.2f} €",
+                "",
+                "Letzte Buchungen:"
+            ]
+            for r in rows[:5]:
+                sign = "+" if r["typ"] == "Einnahme" else "-"
+                lines.append(f"  {r['datum']}  {sign}{r['betrag']:.2f} €  {r['kategorie']}")
+            return "\n".join(lines)
+
+        elif name == "bestand_korrigieren":
+            produkt = inp["produkt"]
+            bestand = inp["bestand"]
+            existing = client.table("produkte").select("id").eq("name", produkt).execute().data
+            if existing:
+                client.table("produkte").update({
+                    "bestand": bestand,
+                    "aktualisiert_am": datetime.utcnow().isoformat()
+                }).eq("name", produkt).execute()
+                return f"✅ {produkt}: Bestand auf {bestand} gesetzt"
+            else:
+                return f"⚠️ '{produkt}' nicht gefunden. Frag mich nach den verfügbaren Produkten."
+
+        return f"Unbekanntes Tool: {name}"
+
+    except Exception as e:
+        return f"⚠️ Datenbankfehler: {str(e)[:300]}"
+
+
+# ─── Kontext ─────────────────────────────────────────────────────────────────
 
 def lade_kontext() -> str:
-    """Liest die CEO-GPT Kontext-Dateien und baut den System-Prompt."""
     teile = []
-
-    dateien = [
-        ("context/business-info.md",   "BUSINESS"),
-        ("context/personal-info.md",   "PERSON"),
-        ("context/strategy.md",        "STRATEGIE"),
-        ("context/current-data.md",    "AKTUELLE LAGE"),
-        ("context/group/key-metrics.md", "KENNZAHLEN"),
-    ]
-
-    for pfad, label in dateien:
+    for pfad, label in [
+        ("context/business-info.md", "BUSINESS"),
+        ("context/strategy.md",      "STRATEGIE"),
+    ]:
         datei = WORKSPACE / pfad
         if datei.exists():
             inhalt = datei.read_text(encoding="utf-8", errors="ignore").strip()
             if inhalt:
                 teile.append(f"=== {label} ===\n{inhalt}")
 
-    kontext = "\n\n".join(teile) if teile else "Noch kein Kontext vorhanden."
+    return f"""Du bist der persönliche Mitarbeiter von Felix — Landwirt, Jäger, Einzelunternehmer.
 
-    return f"""Du bist der persönliche Mitarbeiter von Felix. Du kennst sein Business in der Tiefe.
+{chr(10).join(teile)}
 
-{kontext}
+Du hast Zugriff auf die echte Datenbank mit Beständen, Verkäufen und Kassenbuch.
 
 VERHALTEN:
-- Antworte auf Deutsch, kurz und klar
-- Du kennst Felix und sein Business — kein Briefing nötig
-- Bei Zahlen-Fragen: schau in die Kennzahlen
-- Bei Strategie-Fragen: schau in Strategie und Business-Info
-- Sei direkt und praktisch, keine langen Einleitungen
-- Wenn du etwas nicht weißt, sag es kurz
-"""
+- Kurz und direkt auf Deutsch antworten
+- Bei Bestandsfragen immer Tool benutzen — nie aus dem Kopf antworten
+- Wenn Felix sagt er hat etwas verkauft → verkauf_verbuchen aufrufen
+- Wenn Felix sagt er hat etwas ausgegeben → ausgabe_eintragen aufrufen
+- Zahlen immer mit 2 Dezimalstellen und € Zeichen
+- Kein unnötiges Briefing"""
 
 
-# ─── Sprachnotiz transkribieren ───────────────────────────────────────────────
-
-async def transkribiere(datei_pfad: str) -> str | None:
-    """Versucht eine Audiodatei zu transkribieren. Gibt None zurück wenn nicht möglich."""
-    try:
-        import whisper  # type: ignore
-        model = whisper.load_model("tiny")
-        result = model.transcribe(datei_pfad, language="de")
-        return result["text"].strip()
-    except ImportError:
-        pass
-
-    try:
-        import speech_recognition as sr  # type: ignore
-        r = sr.Recognizer()
-        with sr.AudioFile(datei_pfad) as source:
-            audio = r.record(source)
-        return r.recognize_google(audio, language="de-DE")
-    except Exception:
-        pass
-
-    return None
-
-
-# ─── Claude aufrufen ─────────────────────────────────────────────────────────
+# ─── Claude mit Tool-Schleife ────────────────────────────────────────────────
 
 def frage_claude(nachricht: str, verlauf: list) -> str:
-    """Schickt eine Nachricht an Claude und gibt die Antwort zurück."""
-    client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
-
-    messages = verlauf[-10:] + [{"role": "user", "content": nachricht}]
+    client   = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+    messages = verlauf[-8:] + [{"role": "user", "content": nachricht}]
 
     try:
         response = client.messages.create(
-            model=MODEL,
-            max_tokens=MAX_TOKENS,
-            system=lade_kontext(),
-            messages=messages,
+            model=MODEL, max_tokens=MAX_TOKENS,
+            system=lade_kontext(), tools=TOOLS, messages=messages
         )
-        return response.content[0].text
+
+        while response.stop_reason == "tool_use":
+            tool_uses = [b for b in response.content if b.type == "tool_use"]
+            results   = [
+                {
+                    "type":        "tool_result",
+                    "tool_use_id": t.id,
+                    "content":     fuehre_tool_aus(t.name, t.input)
+                }
+                for t in tool_uses
+            ]
+            messages = messages + [
+                {"role": "assistant", "content": response.content},
+                {"role": "user",      "content": results}
+            ]
+            response = client.messages.create(
+                model=MODEL, max_tokens=MAX_TOKENS,
+                system=lade_kontext(), tools=TOOLS, messages=messages
+            )
+
+        texts = [b for b in response.content if hasattr(b, "text")]
+        return texts[0].text if texts else "Kein Ergebnis."
+
     except anthropic.AuthenticationError:
-        return "⚠️ API-Key ungültig. Prüf den ANTHROPIC_API_KEY in der .env-Datei."
+        return "⚠️ API-Key ungültig."
     except Exception as e:
         return f"⚠️ Fehler: {str(e)[:200]}"
 
@@ -123,36 +275,37 @@ def frage_claude(nachricht: str, verlauf: list) -> str:
 gespraeche: dict[int, list] = {}
 
 
-# ─── Handler ─────────────────────────────────────────────────────────────────
+# ─── Telegram Handler ────────────────────────────────────────────────────────
 
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
-
-    # Beim ersten Start: Chat-ID in .env speichern
-    if not ALLOWED_CHAT:
-        env_pfad = WORKSPACE / ".env"
-        inhalt = env_pfad.read_text(encoding="utf-8")
-        inhalt = inhalt.replace("TELEGRAM_CHAT_ID=", f"TELEGRAM_CHAT_ID={chat_id}")
-        env_pfad.write_text(inhalt, encoding="utf-8")
+    if not os.getenv("TELEGRAM_CHAT_ID"):
+        env  = WORKSPACE / ".env"
+        text = env.read_text(encoding="utf-8")
+        env.write_text(text.replace("TELEGRAM_CHAT_ID=", f"TELEGRAM_CHAT_ID={chat_id}"), encoding="utf-8")
         os.environ["TELEGRAM_CHAT_ID"] = str(chat_id)
 
     await update.message.reply_text(
         "Mitarbeiter bereit.\n\n"
-        "Schick mir Text oder eine Sprachnachricht — ich antworte mit dem vollen Business-Kontext.\n\n"
-        "/neu — Gespräch zurücksetzen\n"
-        "/status — aktueller Stand"
+        "Beispiele:\n"
+        "• Wie viel Met hab ich noch?\n"
+        "• 5 Flaschen Met verkauft, 47,50 €\n"
+        "• 45 € Saatgut ausgegeben\n"
+        "• Kassenstand?\n"
+        "• Was ist heute meine Priorität?\n\n"
+        "/status — Überblick\n"
+        "/neu — Gespräch zurücksetzen"
     )
 
 
 async def cmd_neu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    gespraeche[chat_id] = []
+    gespraeche[update.effective_chat.id] = []
     await update.message.reply_text("Gespräch zurückgesetzt.")
 
 
 async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     antwort = frage_claude(
-        "Gib mir in 3-4 Sätzen den aktuellen Stand: Business, Zahlen, Prioritäten.",
+        "Kurzer Überblick: Kassenstand, welche Produkte sind vorrätig oder leer, nächste Priorität.",
         []
     )
     await update.message.reply_text(antwort)
@@ -160,90 +313,47 @@ async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
-
-    # Zugriff prüfen
     erlaubt = os.getenv("TELEGRAM_CHAT_ID", "")
     if erlaubt and str(chat_id) != erlaubt:
         await update.message.reply_text("Kein Zugriff.")
         return
 
-    nachricht = update.message.text or ""
-    if not nachricht.strip():
+    nachricht = (update.message.text or "").strip()
+    if not nachricht:
         return
 
     verlauf = gespraeche.get(chat_id, [])
-
     await context.bot.send_chat_action(chat_id=chat_id, action="typing")
     antwort = frage_claude(nachricht, verlauf)
 
-    verlauf.append({"role": "user", "content": nachricht})
+    verlauf.append({"role": "user",      "content": nachricht})
     verlauf.append({"role": "assistant", "content": antwort})
-    gespraeche[chat_id] = verlauf[-20:]
+    gespraeche[chat_id] = verlauf[-16:]
 
     await update.message.reply_text(antwort)
 
 
-async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-
-    erlaubt = os.getenv("TELEGRAM_CHAT_ID", "")
-    if erlaubt and str(chat_id) != erlaubt:
-        return
-
-    await context.bot.send_chat_action(chat_id=chat_id, action="typing")
-
-    # Audiodatei herunterladen
-    voice = update.message.voice
-    datei = await context.bot.get_file(voice.file_id)
-
-    with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as tmp:
-        tmp_pfad = tmp.name
-
-    await datei.download_to_drive(tmp_pfad)
-
-    # Transkribieren
-    text = await transkribiere(tmp_pfad)
-    Path(tmp_pfad).unlink(missing_ok=True)
-
-    if not text:
-        await update.message.reply_text(
-            "Sprachnachrichten werden erst unterstützt wenn ffmpeg installiert ist.\n"
-            "Schreib die Nachricht kurz als Text, ich antworte sofort."
-        )
-        return
-
-    # Antworten
-    verlauf = gespraeche.get(chat_id, [])
-    antwort = frage_claude(text, verlauf)
-
-    verlauf.append({"role": "user", "content": f"[Sprachnachricht]: {text}"})
-    verlauf.append({"role": "assistant", "content": antwort})
-    gespraeche[chat_id] = verlauf[-20:]
-
-    await update.message.reply_text(f"_{text}_\n\n{antwort}", parse_mode="Markdown")
-
-
-# ─── Start ────────────────────────────────────────────────────────────────────
+# ─── Start ───────────────────────────────────────────────────────────────────
 
 def main():
-    if not BOT_TOKEN:
-        print("FEHLER: TELEGRAM_BOT_TOKEN fehlt in .env")
-        return
-    if not ANTHROPIC_KEY:
-        print("FEHLER: ANTHROPIC_API_KEY fehlt in .env")
+    fehlend = [k for k, v in {
+        "TELEGRAM_BOT_TOKEN": BOT_TOKEN,
+        "ANTHROPIC_API_KEY":  ANTHROPIC_KEY,
+        "SUPABASE_URL":       SUPABASE_URL,
+        "SUPABASE_KEY":       SUPABASE_KEY,
+    }.items() if not v]
+
+    if fehlend:
+        for k in fehlend:
+            print(f"FEHLER: {k} fehlt in .env")
         return
 
-    print("Mitarbeiter startet...")
-    print(f"Bot läuft. Öffne Telegram und schreib deinen Bot an.")
-    print("Stoppen: Ctrl+C")
-
+    print("Mitarbeiter startet (Supabase-Anbindung aktiv)...")
     app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", cmd_start))
-    app.add_handler(CommandHandler("neu",   cmd_neu))
+    app.add_handler(CommandHandler("start",  cmd_start))
+    app.add_handler(CommandHandler("neu",    cmd_neu))
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
-    app.add_handler(MessageHandler(filters.VOICE, handle_voice))
-
     app.run_polling(drop_pending_updates=True)
 
 

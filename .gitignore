@@ -1,0 +1,22 @@
+# API-Keys und Zugänge — niemals committen
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Node
+node_modules/
+
+# Temporäre Dateien
+*.tmp
+*.log

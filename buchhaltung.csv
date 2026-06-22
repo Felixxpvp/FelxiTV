@@ -1,0 +1,6 @@
+datum,typ,kategorie,beschreibung,betrag,zahlungsart,notiz
+2026-06-01,Ausgabe,Saatgut,Gemüsesamen Frühjahr,45.00,Bar,Beispiel – bitte ersetzen
+2026-06-05,Ausgabe,Imkerei,Wachs und Rähmchen,28.50,Überweisung,Beispiel – bitte ersetzen
+2026-06-10,Einnahme,Met-Verkauf,2x Met 0.5L,19.00,Bar,Beispiel – bitte ersetzen
+2026-06-15,Ausgabe,Jagd,Munition,32.00,Bar,Beispiel – bitte ersetzen
+2026-06-20,Einnahme,Fleisch-Verkauf,Wildschwein 1.5kg,12.00,Bar,Beispiel – bitte ersetzen

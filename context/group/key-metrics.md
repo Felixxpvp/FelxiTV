@@ -3,6 +3,24 @@
 > Automatisch aus der Datenbank erzeugt. Letztes Update: 2026-06-22
 > Quelle: `data/data.db` | Neu erzeugen: `python scripts/generate_metrics.py`
 
+## Kassenbuch
+| | Betrag |
+|---|---|
+| Einnahmen gesamt | €31 |
+| Ausgaben gesamt | €106 |
+| **Saldo** | **€-74** |
+
+**Diesen Monat:** Einnahmen €31 | Ausgaben €106 | Saldo €-74
+
+**Letzte Buchungen:**
+| Datum | Typ | Kategorie | Betrag |
+|-------|-----|-----------|--------|
+| 2026-06-20 | Einnahme | Fleisch-Verkauf | €12.00 |
+| 2026-06-15 | Ausgabe | Jagd | €32.00 |
+| 2026-06-10 | Einnahme | Met-Verkauf | €19.00 |
+| 2026-06-05 | Ausgabe | Imkerei | €28.50 |
+| 2026-06-01 | Ausgabe | Saatgut | €45.00 |
+
 ## Verkäufe
 **Gesamt:** 2 Verkäufe | Umsatz: €31
 
@@ -27,5 +45,6 @@
 ## Datenfrische
 | Quelle | Letzter Datensatz | Status |
 |--------|-------------------|--------|
+| buchhaltung | 2026-06-20 | verbunden |
 | fx_rates | 2026-06-19 | verbunden |
 | verkauf | 2026-06-22 | verbunden |

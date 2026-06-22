@@ -101,6 +101,55 @@ def section_fx_rates(conn):
 
 # --- ANPASSUNGS-ZONE ---
 
+def section_buchhaltung(conn):
+    """Ein- und Ausgaben aus dem Kassenbuch."""
+    if not table_exists(conn, "buchhaltung"):
+        return []
+    lines = ["## Kassenbuch"]
+
+    # Gesamtsaldo
+    totals = query_all(conn, """
+        SELECT typ, SUM(betrag) as summe, COUNT(*) as anzahl
+        FROM buchhaltung WHERE betrag IS NOT NULL
+        GROUP BY typ
+    """)
+    einnahmen = next((r["summe"] for r in totals if r["typ"] == "Einnahme"), 0)
+    ausgaben = next((r["summe"] for r in totals if r["typ"] == "Ausgabe"), 0)
+    saldo = (einnahmen or 0) - (ausgaben or 0)
+    lines.append(f"| | Betrag |")
+    lines.append(f"|---|---|")
+    lines.append(f"| Einnahmen gesamt | {fmt_currency(einnahmen)} |")
+    lines.append(f"| Ausgaben gesamt | {fmt_currency(ausgaben)} |")
+    lines.append(f"| **Saldo** | **{fmt_currency(saldo)}** |")
+    lines.append("")
+
+    # Diesen Monat
+    mtd = query_all(conn, """
+        SELECT typ, SUM(betrag) as summe
+        FROM buchhaltung
+        WHERE strftime('%Y-%m', datum) = strftime('%Y-%m', 'now')
+        AND betrag IS NOT NULL
+        GROUP BY typ
+    """)
+    if mtd:
+        ein_m = next((r["summe"] for r in mtd if r["typ"] == "Einnahme"), 0)
+        aus_m = next((r["summe"] for r in mtd if r["typ"] == "Ausgabe"), 0)
+        lines.append(f"**Diesen Monat:** Einnahmen {fmt_currency(ein_m)} | Ausgaben {fmt_currency(aus_m)} | Saldo {fmt_currency((ein_m or 0) - (aus_m or 0))}")
+        lines.append("")
+
+    # Letzte 5 Buchungen
+    recent = query_all(conn, "SELECT datum, typ, kategorie, beschreibung, betrag FROM buchhaltung ORDER BY datum DESC, id DESC LIMIT 5")
+    if recent:
+        lines.append("**Letzte Buchungen:**")
+        lines.append("| Datum | Typ | Kategorie | Betrag |")
+        lines.append("|-------|-----|-----------|--------|")
+        for r in recent:
+            betrag = f"€{r['betrag']:.2f}" if r["betrag"] else "-"
+            lines.append(f"| {r['datum']} | {r['typ']} | {r['kategorie'] or '-'} | {betrag} |")
+    lines.append("")
+    return lines
+
+
 def section_verkauf(conn):
     """Verkaufsjournal von Felix."""
     if not table_exists(conn, "verkauf"):
@@ -144,6 +193,7 @@ def section_verkauf(conn):
 # Alle Sektions-Funktionen hier registrieren. Während der Installation
 # kommen weitere dazu.
 SECTIONS = [
+    section_buchhaltung,
     section_verkauf,
     section_fx_rates,
 ]

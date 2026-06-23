@@ -8,6 +8,8 @@ Starten: python scripts/stimme.py
 """
 
 import os
+import base64
+import json
 from datetime import date, datetime
 from pathlib import Path
 
@@ -311,6 +313,91 @@ async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(antwort)
 
 
+async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    erlaubt = os.getenv("TELEGRAM_CHAT_ID", "")
+    if erlaubt and str(chat_id) != erlaubt:
+        return
+
+    await context.bot.send_chat_action(chat_id=chat_id, action="typing")
+
+    # Bestes Foto herunterladen
+    photo = update.message.photo[-1]
+    tg_file = await context.bot.get_file(photo.file_id)
+    bild_bytes = await tg_file.download_as_bytearray()
+    bild_b64 = base64.standard_b64encode(bytes(bild_bytes)).decode("utf-8")
+
+    antwort = verarbeite_bild(bild_b64)
+    await update.message.reply_text(antwort)
+
+
+def verarbeite_bild(bild_b64: str) -> str:
+    ai = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+    today = date.today().isoformat()
+
+    try:
+        response = ai.messages.create(
+            model=MODEL,
+            max_tokens=2048,
+            system="""Du bist der Mitarbeiter von Felix, einem Landwirt und Einzelunternehmer.
+
+Wenn du einen Kontoauszug, eine Quittung oder Rechnung siehst:
+Extrahiere ALLE Transaktionen und antworte NUR mit einem JSON-Array:
+[{"datum": "YYYY-MM-DD", "typ": "Einnahme" oder "Ausgabe", "betrag": Zahl, "beschreibung": "kurze Beschreibung", "kategorie": "Kategorie"}]
+
+Passende Kategorien: Met-Verkauf, Fleisch-Verkauf, Gemüse-Verkauf, Obst-Verkauf, Saatgut, Jagd, Imkerei, Verpackung, Betriebskosten, Sonstiges
+
+Wenn kein Kontoauszug/Quittung: Antworte kurz auf Deutsch was du siehst.""",
+            messages=[{
+                "role": "user",
+                "content": [
+                    {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": bild_b64}},
+                    {"type": "text", "text": "Bitte verarbeite dieses Bild."}
+                ]
+            }]
+        )
+
+        text = response.content[0].text.strip()
+
+        # JSON-Block extrahieren falls vorhanden
+        start = text.find("[")
+        end   = text.rfind("]") + 1
+        if start != -1 and end > start:
+            buchungen = json.loads(text[start:end])
+            client = sb()
+            ok = 0
+            for b in buchungen:
+                try:
+                    client.table("buchhaltung").insert({
+                        "datum":        b.get("datum", today),
+                        "typ":          b["typ"],
+                        "kategorie":    b.get("kategorie", "Sonstiges"),
+                        "betrag":       round(float(b["betrag"]), 2),
+                        "beschreibung": b.get("beschreibung", "")
+                    }).execute()
+                    ok += 1
+                except Exception:
+                    pass
+
+            einnahmen = sum(float(b["betrag"]) for b in buchungen if b["typ"] == "Einnahme")
+            ausgaben  = sum(float(b["betrag"]) for b in buchungen if b["typ"] == "Ausgabe")
+
+            zeilen = [f"Eingetragen: {ok} Buchungen\n"]
+            for b in buchungen:
+                sign = "+" if b["typ"] == "Einnahme" else "-"
+                zeilen.append(f"{b.get('datum','')}  {sign}{float(b['betrag']):.2f} €  {b.get('beschreibung','')}")
+            if einnahmen: zeilen.append(f"\nEinnahmen: {einnahmen:.2f} €")
+            if ausgaben:  zeilen.append(f"Ausgaben: {ausgaben:.2f} €")
+            return "\n".join(zeilen)
+
+        return text
+
+    except json.JSONDecodeError:
+        return text
+    except Exception as e:
+        return f"Fehler beim Bildlesen: {str(e)[:200]}"
+
+
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     erlaubt = os.getenv("TELEGRAM_CHAT_ID", "")
@@ -354,6 +441,7 @@ def main():
     app.add_handler(CommandHandler("neu",    cmd_neu))
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.run_polling(drop_pending_updates=True)
 
 
